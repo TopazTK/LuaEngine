@@ -28,14 +28,7 @@ namespace LuaEngine.API
                 return SharpHook[(IntPtr)Address].Execute<long>();
         }
 
-        public static void JumpFunction(int Address, params dynamic[] Arguments)
-        {
-            if (Arguments.Length > 1)
-                SharpHook[(IntPtr)Address].ExecuteJMP(SharpConvention.MicrosoftX64, Arguments);
-
-            else
-                SharpHook[(IntPtr)Address].ExecuteJMP(Arguments[0]);
-        }
+        public static void JumpFunction(int Address, params dynamic[] Arguments) => SharpHook[(IntPtr)Address].ExecuteJMP(SharpConvention.MicrosoftX64, Arguments);
 
         public static void CallFunction(int Address, params dynamic[] Arguments)
         {
