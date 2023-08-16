@@ -199,7 +199,7 @@ namespace LuaEngine
                     if (_frameFunction != null)
                         while(true) 
                         { 
-                            try { _frameFunction.Call(); Thread.Sleep(1); }
+                            try { _frameFunction.Call(); }
                             catch (LuaScriptException _error) 
                             {
                                 API.Console.ConsolePrint("An exception was caught! -> " + _error.Source + " " +  _error.Message, 2);

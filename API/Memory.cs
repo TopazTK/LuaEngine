@@ -13,7 +13,7 @@ namespace LuaEngine.API
         {
             if (Value is LuaTable)
             {
-                var _value = Value.Values.Cast<long>().ToArray();
+                var _value = (Value as LuaTable).Values.Cast<long>().ToArray();
                 var _byteArray = new byte[_value.Length];
 
                 for (int i = 0; i < _byteArray.Length; i++)
