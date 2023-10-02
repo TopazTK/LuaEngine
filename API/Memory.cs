@@ -26,7 +26,7 @@ namespace LuaEngine.API
                 Hypervisor.WriteArray(Address, Value, Absolute);
         }
 
-        public static void WriteString(ulong Address, string Value, bool Absolute = false)
+        public static void WriteString(ulong Address, char[] Value, bool Absolute = false)
         {
             var _byteArray = new byte[Value.Length];
 

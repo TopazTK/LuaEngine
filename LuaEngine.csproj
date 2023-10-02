@@ -6,6 +6,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>LuaEngine-REBORN</AssemblyName>
+    <Version>1.00</Version>
+    <Authors>LuaEngine-REBORN</Authors>
+    <Company>TopazTK</Company>
+    <Product>LuaEngine-REBORN</Product>
   </PropertyGroup>
 
   <ItemGroup>

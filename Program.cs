@@ -26,6 +26,10 @@ namespace LuaEngine
         static List<Lua> ScriptList = new List<Lua>();
         static List<Task> ThreadList = new List<Task>();
 
+        static List<string> ScriptFolderList = new List<string>();
+
+        static CancellationTokenSource _cancelToken = new CancellationTokenSource();
+
         public static void RegisterAPI(Lua Input)
         {
             // Function Calling
@@ -79,6 +83,12 @@ namespace LuaEngine
             // Pathways.
             _luaState["CHEATS_PATH"] = "NOT_AVAILABLE";
             _luaState["SCRIPT_PATH"] = ScriptName;
+
+            foreach (var _dir in ScriptFolderList)
+            {
+                _luaState["package.path"] = _luaState["package.path"] + ";" + Environment.CurrentDirectory + "/" + _dir + "/io_packages/?.lua";
+                _luaState["package.cpath"] = _luaState["package.cpath"] + ";" + Environment.CurrentDirectory + "/" + _dir + "/io_packages/?.dll";
+            }
 
             RegisterAPI(_luaState);
 
@@ -160,6 +170,8 @@ namespace LuaEngine
             {
                 var _string = _path.ToString();
                 _scriptList.AddRange(Directory.GetFiles(_string.Contains("$/") ? _string.Replace("$/", "scripts/") : _string));
+
+                ScriptFolderList.Add(_string.Contains("$/") ? _string.Replace("$/", "scripts/") : _string);
             }
 
             foreach (var _s in _scriptList)
@@ -192,7 +204,7 @@ namespace LuaEngine
 
             foreach (var _s in ScriptList)
             {
-                var _task = Task.Run(() =>
+                var _task = Task.Factory.StartNew(() =>
                 {
                     var _frameFunction = _s["_OnFrame"] as LuaFunction;
 
@@ -206,12 +218,44 @@ namespace LuaEngine
                                 _frameFunction = null;
                             }
                         };
-                });
+                }, _cancelToken.Token);
 
                 ThreadList.Add(_task);
             }
 
-            SysConsole.ReadLine();
+            SysConsole.WriteLine();
+            API.Console.ConsolePrint("All done! Press \"F2\" to reload the engine, or press \"Q\" to exit out of it!", 0);
+
+        JUMP_KEY:
+
+            var _keyRead = SysConsole.ReadKey();
+
+            if (_keyRead.Key == ConsoleKey.F2)
+            {
+                SysConsole.Clear();
+                _cancelToken.Cancel();
+
+                ThreadList.Clear();
+                ScriptList.Clear();
+                ScriptFolderList.Clear();
+
+                Main();
+            }
+
+            else if (_keyRead.Key == ConsoleKey.Q)
+            {
+                _cancelToken.Cancel();
+
+                ThreadList.Clear();
+                ScriptList.Clear();
+                ScriptFolderList.Clear();
+
+                Environment.Exit(0);
+            }
+            
+
+            else
+                goto JUMP_KEY;
         }
     }
 }
